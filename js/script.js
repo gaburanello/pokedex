@@ -16,9 +16,10 @@ const fetchPokemon = async (pokemon) => {
 
 }
 
-const renderPokemon = async (pokemon) => {
+const renderPokemon = async (pokemon, normal) => {
     const data = await fetchPokemon(pokemon);
     if (data) {
+        if(normal == false){
         pokemonElement2.src = '';
         pokemonName.innerHTML = data.name;
         pokemonNumber.innerHTML = data.id;
@@ -26,6 +27,16 @@ const renderPokemon = async (pokemon) => {
         pokemonElement.src = './images/elements/' + data['types'][0]['type']['name'] + '.png';
         if(data['types'][1]['type']['name'])
             pokemonElement2.src = './images/elements/' + data['types'][1]['type']['name'] + '.png';
+        }
+        else{
+            pokemonElement2.src = '';
+            pokemonName.innerHTML = data.name;
+            pokemonNumber.innerHTML = data.id;
+            pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_shiny'];
+            pokemonElement.src = './images/elements/' + data['types'][0]['type']['name'] + '.png';
+            if(data['types'][1]['type']['name'])
+                pokemonElement2.src = './images/elements/' + data['types'][1]['type']['name'] + '.png';
+        }
     }else{
         pokemonName.innerHTML = 'Not found :c';
         pokemonNumber.innerHTML = '';
@@ -41,14 +52,17 @@ form.addEventListener('submit', () => {
     input.value = '';
 });
 
+const showShiny = async () => {
+    renderPokemon(input.value, true);
+}
 const nextPoke = async () => {
     event.preventDefault();
     input.value = input.value == 'NaN' ? 1: parseInt(input.value) + 1;
-    renderPokemon(input.value);
+    renderPokemon(input.value, false);
 }
 const prevPoke = async () => {
     event.preventDefault();
     if(parseInt(input.value) > 0)
         input.value = input.value == 'NaN' ? 1: parseInt(input.value) - 1;
-    renderPokemon(input.value);
+    renderPokemon(input.value, false);
 }
